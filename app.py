@@ -1,10 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, flash, session
+from flask import *
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 import pam
 import subprocess
-from src.iptables_parser import parse_iptables_output
+from src.iptables_parser import parse_iptables_output,get_chains
 from src.restart import restart_iptables
 app = Flask(__name__)
 app.secret_key = 'iptables'  # Replace with a strong secret key
@@ -98,5 +98,37 @@ def delete_rule(tablename,chainname,line):
         flash(f"Error deleting :{e}",'danger')
 
     return redirect(f'/iptables/{tablename}')
+@app.route("/ruleadd/<table>",methods=["GET","POST"])
+def ruleadd(table):
+    chains = get_chains(table)
+
+    if request.method == 'POST':
+        # Extract form data
+        chain = request.form.get('chain')
+        protocol = request.form.get('protocol')
+        source_ip = request.form.get('source_ip')
+        destination_ip = request.form.get('destination_ip')
+        source_port = request.form.get('source_port')
+        destination_port = request.form.get('destination_port')
+        line_number = request.form.get('line_number')
+        action = request.form.get('action')
+        redirect_destination = request.form.get('redirect_destination') if action == 'DNAT' else None
+
+        # Validation (basic checks, extend as needed)
+        if not chain or not protocol or not source_ip or not destination_ip:
+            flash('Please fill in all required fields.')
+            return redirect(url_for('add_rule'))
+
+        # Handle the form submission (e.g., add to iptables)
+        # Here you would typically call a function to update iptables
+        # For demonstration purposes, we simply print the data
+        print(f'Adding rule: {chain}, {protocol}, {source_ip}, {destination_ip}, {source_port}, {destination_port}, {line_number}, {action}, {redirect_destination}')
+
+        # Show a success message (optional)
+        flash('Rule added successfully!')
+        return redirect(url_for('add_rule'))
+
+    return render_template("ruleadd.html",table=table,chains=chains)
+
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0")

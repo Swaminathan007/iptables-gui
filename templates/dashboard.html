@@ -23,6 +23,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{ table.capitalize() }} Table</h5>
+                    <a href="/ruleadd/{{table}}" class="btn btn-primary d-block mt-3">Add rules</a>
                     <a href="{{ url_for('iptables_table', table_name=table) }}" class="btn btn-primary d-block mt-3">View Rules</a>
                 </div>
             </div>

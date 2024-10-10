@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}{{ table }}{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <form action="." method="POST">
+        <h2>ADD {{table.upper()}} TABLE RULE</h2>
+
+        <div class="mb-2">
+            <label for="chain">CHAIN</label>
+            <select name="chain" id="chain" class="form-select">
+                {% for chain in chains %}
+                    <option value="{{ chain }}">{{ chain }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-2">
+            <label for="protocol">PROTOCOL</label>
+            <select name="protocol" id="protocol" class="form-select">
+                <option value="tcp">TCP</option>
+                <option value="udp">UDP</option>
+                <option value="icmp">ICMP</option>
+                <option value="any">ANY</option>
+            </select>
+        </div>
+
+        <div class="mb-2">
+            <label for="source_ip">SOURCE IP CIDR</label>
+            <input type="text" name="source_ip" id="source_ip" class="form-control" placeholder="e.g. 192.168.1.0/24" required>
+        </div>
+
+        <div class="mb-2">
+            <label for="destination_ip">DESTINATION IP CIDR</label>
+            <input type="text" name="destination_ip" id="destination_ip" class="form-control" placeholder="e.g. 192.168.1.0/24" required>
+        </div>
+
+        <div class="mb-2">
+            <label for="source_port">SOURCE PORT</label>
+            <input type="number" name="source_port" id="source_port" class="form-control" placeholder="e.g. 80" required>
+        </div>
+
+        <div class="mb-2">
+            <label for="destination_port">DESTINATION PORT</label>
+            <input type="number" name="destination_port" id="destination_port" class="form-control" placeholder="e.g. 8080" required>
+        </div>
+
+        <div class="mb-2">
+            <label for="line_number">LINE NUMBER</label>
+            <input type="number" name="line_number" id="line_number" class="form-control" placeholder="e.g. 1" required>
+        </div>
+
+        <div class="mb-2">
+            <label for="action">ACTION</label>
+            <select name="action" id="action" class="form-select" onchange="toggleRedirectInput()">
+                <option value="ACCEPT">ACCEPT</option>
+                <option value="DROP">DROP</option>
+                <option value="REJECT">REJECT</option>
+                <option value="LOG">LOG</option>
+                <option value="SNAT">SNAT</option>
+                <option value="DNAT">DNAT</option>
+                <option value="MASQUERADE">MASQUERADE</option>
+                <option value="RETURN">RETURN</option>
+                <option value="MARK">MARK</option>
+                <option value="CLASSIFY">CLASSIFY</option>
+                <option value="REDIRECT">REDIRECT</option>
+                <option value="QUEUE">QUEUE</option>
+                <option value="CONNMARK">CONNMARK</option>
+                <option value="CT">CT</option>
+            </select>
+        </div>
+
+        <!-- Redirect input, hidden by default -->
+        <div class="mb-2" id="redirectInput" style="display: none;">
+            <label for="redirect_destination">REDIRECT TO</label>
+            <input type="text" name="redirect_destination" id="redirect_destination" class="form-control" placeholder="e.g. 192.168.1.2:443" required>
+        </div>
+
+        <div class="mb-2">
+            <button type="submit" class="btn btn-primary">Add Rule</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function toggleRedirectInput() {
+        const actionSelect = document.getElementById('action');
+        const redirectInput = document.getElementById('redirectInput');
+        
+        // Show the redirect input if DNAT is selected, otherwise hide it
+        if (actionSelect.value === 'DNAT') {
+            redirectInput.style.display = 'block';
+        } else {
+            redirectInput.style.display = 'none';
+        }
+    }
+</script>
+
+{% endblock %}

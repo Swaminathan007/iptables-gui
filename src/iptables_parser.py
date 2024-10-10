@@ -26,3 +26,19 @@ def parse_iptables_output(output):
             chain[cur_chain].append(chain_rule)
 
     return chain
+def get_chains(table):
+        result = subprocess.run(
+        ['sudo','iptables','-t',table,'-L','-n','--line-numbers'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=True)
+
+        result = result.stdout
+        lines = result.split("\n")
+        chains = []
+        for line in lines:
+            if(line.startswith("Chain")):
+                cur_chain = line.split(" ")[1]    
+                chains.append(cur_chain)
+        return chains 
