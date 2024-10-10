@@ -6,5 +6,9 @@ Adding rules is in the process
 To start the app
 
 sudo git clone https://github.com/Swaminathan007/iptables-gui.git
+
+
 sudo chmod +x setup.sh
+
+
 ./setup.sh
