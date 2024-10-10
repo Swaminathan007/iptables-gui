@@ -5,8 +5,6 @@
 {%include "navbar.html"%}
 
 <div class="container mt-5">
-    <h2>Welcome, {{ username }}!</h2>
-    <p>You have successfully logged in using your Linux system credentials.</p>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
@@ -17,6 +15,7 @@
         {% endfor %}
         {% endif %}
     {% endwith %}
+    <h2>Welcome, {{ username }}!</h2>
     <h3 class="mt-4">IPTables Tables</h3>
     <div class="row">
         {% for table in tables %}
