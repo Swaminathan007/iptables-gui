@@ -19,11 +19,23 @@ def parse_iptables_output(output):
             cur_chain = line.split(" ")[1]    
             chain[cur_chain] = []        
         elif(len(line) > 0 and line[0].isdigit()):
-            rule = line.split(" ")
-            chain_rule = {}
-            chain_rule["line"] = rule[0]
-            chain_rule["action"] = rule[4]
-            chain[cur_chain].append(chain_rule)
+            r = ""
+            arr = []
+            for c in line:
+                if(c.strip() != ''):
+                    r+=c
+                else:
+                    if(r.strip()!=''):
+                        arr.append(r)
+                    r = ''
+            if(len(arr) > 6):
+                for i in range(7,len(arr)):
+                    arr[6]+=(" "+arr[i])
+                arr = arr[:7]
+            else:
+                arr.append(None)
+            print(arr)
+            chain[cur_chain].append(arr)
 
     return chain
 def get_chains(table):

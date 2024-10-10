@@ -23,21 +23,33 @@
                         <tr>
                             <th>LINE</th>
                             <th>ACTION</th>
+                            <th>PROTOCOL</th>
+                            <th>OPT</th>
+                            <th>SOURCE IP</th>
+                            <th>DESTINATION IP</th>
+                            <th>OPTIONS</th>
                             <th>DELETE</th>
                         </tr>
                     </thead>
                     <tbody> 
                         {%for rule in rules[chain]%}
                         <tr>
-                            <td>{{rule['line']}}</td>
-                            <td>{{rule['action']}}</td>
+                            {%for prop in rule%}
+                                {%if prop%}
+                                    <td>{{prop}}</td>
+                                {%else%}
+                                    <td></td>
+                                {%endif%}
+                            {%endfor%}
+                            
                             <td><a href="/rule/delete/{{table_name}}/{{chain}}/{{rule['line']}}">DELETE</a></td>
-                        </tr>
+                        </tr>   
                         {%endfor%}
                     </tbody>
                 </table>
             {%endfor%}
         {%endif%}
+        <a href="/ruleadd/{{table_name}}" class="btn btn-success mt-3 mb-2">Add Rule</a>
         <a href="{{ url_for('dashboard') }}" class="btn btn-secondary mt-3 mb-2">Back to Dashboard</a>
     </div>
 {%endblock%}
