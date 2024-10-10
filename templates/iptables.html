@@ -2,6 +2,25 @@
 {% block title %}{{ table_name }}{% endblock %}
 {% block content %}
     {% include "navbar.html" %}
+    <style>
+        /* Custom CSS for better phone layout */
+        @media (max-width: 576px) {
+            table#ruleTable td {
+                font-size: 12px;
+                padding: 4px;
+            }
+
+            h2, h3 {
+                font-size: 1.25rem;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+    </style>
     <div class="container mt-5">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
