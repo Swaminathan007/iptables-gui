@@ -1,55 +1,66 @@
-{%extends "base.html"%}
-{%block title%}{{table_name}}{%endblock%}
-{%block content%}
-    {%include "navbar.html"%}
-    
+{% extends "base.html" %}
+{% block title %}{{ table_name }}{% endblock %}
+{% block content %}
+    {% include "navbar.html" %}
     <div class="container mt-5">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-            {% endif %} 
-        {% endwith %} 
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <h2>{{ table_name.capitalize() }} IPTables Rules</h2>
-        {%if rules%}
-            {%for chain in rules%}
-                <h3>{{chain}}</h3>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>LINE</th>
-                            <th>ACTION</th>
-                            <th>PROTOCOL</th>
-                            <th>OPT</th>
-                            <th>SOURCE IP</th>
-                            <th>DESTINATION IP</th>
-                            <th>OPTIONS</th>
-                            <th>DELETE</th>
-                        </tr>
-                    </thead>
-                    <tbody> 
-                        {%for rule in rules[chain]%}
-                        <tr>
-                            {%for prop in rule%}
-                                {%if prop%}
-                                    <td>{{prop}}</td>
-                                {%else%}
-                                    <td></td>
-                                {%endif%}
-                            {%endfor%}
-                            
-                            <td><a href="/rule/delete/{{table_name}}/{{chain}}/{{rule['line']}}">DELETE</a></td>
-                        </tr>   
-                        {%endfor%}
-                    </tbody>
-                </table>
-            {%endfor%}
-        {%endif%}
-        <a href="/ruleadd/{{table_name}}" class="btn btn-success mt-3 mb-2">Add Rule</a>
+
+        {% if rules %}
+            {% for chain in rules %}
+                <h3>{{ chain }}</h3>
+
+                {% if rules[chain] %}
+                <!-- Responsive Table -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover rounded" id="ruleTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>LINE</th>
+                                <th>ACTION</th>
+                                <th>PROTOCOL</th>
+                                <th>OPT</th>
+                                <th>SOURCE IP</th>
+                                <th>DESTINATION IP</th>
+                                <th>OPTIONS</th>
+                                <th>DELETE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rule in rules[chain] %}
+                                <tr>
+                                    {% for prop in rule %}
+                                        <td>{{ prop if prop else '' }}</td>
+                                    {% endfor %}
+                                    <td>
+                                        <a href="/rule/delete/{{ table_name }}/{{ chain }}/{{ rule[0] }}" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <p>No rules for this chain.</p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No rules available.</p>
+        {% endif %}
+
+        <a href="/ruleadd/{{ table_name }}" class="btn btn-success mt-3 mb-2">Add Rule</a>
         <a href="{{ url_for('dashboard') }}" class="btn btn-secondary mt-3 mb-2">Back to Dashboard</a>
     </div>
-{%endblock%}
+{% endblock %}

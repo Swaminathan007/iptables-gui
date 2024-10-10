@@ -10,6 +10,7 @@
         {% for category, message in messages %}
             <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
             {{ message }}
+            <a href="/iptables/{{table}}" class="btn btn-link">View rules</a>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}

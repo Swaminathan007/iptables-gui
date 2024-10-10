@@ -28,13 +28,15 @@ def parse_iptables_output(output):
                     if(r.strip()!=''):
                         arr.append(r)
                     r = ''
+            if(r.strip() != ''):
+                arr.append(r)
             if(len(arr) > 6):
                 for i in range(7,len(arr)):
-                    arr[6]+=(" "+arr[i])
+                    arr[6]= arr[6] + " " +arr[i]
                 arr = arr[:7]
             else:
                 arr.append(None)
-            print(arr)
+            # print(arr)
             chain[cur_chain].append(arr)
 
     return chain
