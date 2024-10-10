@@ -6,6 +6,7 @@ import pam
 import subprocess
 from src.iptables_parser import parse_iptables_output,get_chains
 from src.restart import restart_iptables
+from src.rule_adder import add_rule
 app = Flask(__name__)
 app.secret_key = 'iptables'  # Replace with a strong secret key
 # Define available iptables tables
@@ -93,7 +94,7 @@ def delete_rule(tablename,chainname,line):
             check=True
         )
         restart_iptables()
-        flash('Please log in to access the dashboard.', 'warning')
+        flash('Rule deleted.', 'success')   
     except Exception as e:
         flash(f"Error deleting :{e}",'danger')
 
@@ -113,20 +114,29 @@ def ruleadd(table):
         line_number = request.form.get('line_number')
         action = request.form.get('action')
         redirect_destination = request.form.get('redirect_destination') if action == 'DNAT' else None
-
-        # Validation (basic checks, extend as needed)
-        if not chain or not protocol or not source_ip or not destination_ip:
-            flash('Please fill in all required fields.')
-            return redirect(url_for('add_rule'))
-
-        # Handle the form submission (e.g., add to iptables)
-        # Here you would typically call a function to update iptables
-        # For demonstration purposes, we simply print the data
-        print(f'Adding rule: {chain}, {protocol}, {source_ip}, {destination_ip}, {source_port}, {destination_port}, {line_number}, {action}, {redirect_destination}')
-
-        # Show a success message (optional)
-        flash('Rule added successfully!')
-        return redirect(url_for('add_rule'))
+        if(len(source_ip.strip()) == 0):
+            source_ip = "0.0.0.0/0"
+        if(len(source_ip.strip()) == 0):
+            destination_ip = "0.0.0.0/0"
+        if(len(source_port.strip()) == 0):
+            source_port = "any"
+        if(len(destination_port.strip()) == 0):
+            destination_port = "any"
+        rule = [chain
+                ,protocol
+                ,source_ip
+                ,destination_ip
+                ,source_port
+                ,destination_port
+                ,line_number
+                ,action
+                ,redirect_destination]
+        try:
+            add_rule(rule,table)
+            flash('Rule added successfully!','success')
+            return redirect(url_for('ruleadd',table=table))
+        except Exception as e:
+            flash(f'Error adding rule : {e}','danger')
 
     return render_template("ruleadd.html",table=table,chains=chains)
 

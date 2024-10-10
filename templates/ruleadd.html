@@ -5,7 +5,17 @@
 {% block content %}
 {% include 'navbar.html' %}
 <div class="container mt-5">
-    <form action="." method="POST">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        {% endif %} 
+    {% endwith %} 
+    <form  method="POST">
         <h2>ADD {{table.upper()}} TABLE RULE</h2>
 
         <div class="mb-2">
@@ -29,27 +39,27 @@
 
         <div class="mb-2">
             <label for="source_ip">SOURCE IP CIDR</label>
-            <input type="text" name="source_ip" id="source_ip" class="form-control" placeholder="e.g. 192.168.1.0/24" required>
+            <input type="text" name="source_ip" id="source_ip" class="form-control" placeholder="e.g. 192.168.1.0/24">
         </div>
 
         <div class="mb-2">
             <label for="destination_ip">DESTINATION IP CIDR</label>
-            <input type="text" name="destination_ip" id="destination_ip" class="form-control" placeholder="e.g. 192.168.1.0/24" required>
+            <input type="text" name="destination_ip" id="destination_ip" class="form-control" placeholder="e.g. 192.168.1.0/24">
         </div>
 
         <div class="mb-2">
             <label for="source_port">SOURCE PORT</label>
-            <input type="number" name="source_port" id="source_port" class="form-control" placeholder="e.g. 80" required>
+            <input type="number" name="source_port" id="source_port" class="form-control" placeholder="e.g. 80">
         </div>
 
         <div class="mb-2">
             <label for="destination_port">DESTINATION PORT</label>
-            <input type="number" name="destination_port" id="destination_port" class="form-control" placeholder="e.g. 8080" required>
+            <input type="number" name="destination_port" id="destination_port" class="form-control" placeholder="e.g. 8080">
         </div>
 
         <div class="mb-2">
             <label for="line_number">LINE NUMBER</label>
-            <input type="number" name="line_number" id="line_number" class="form-control" placeholder="e.g. 1" required>
+            <input type="number" name="line_number" id="line_number" class="form-control" placeholder="e.g. 1">
         </div>
 
         <div class="mb-2">
