@@ -75,6 +75,7 @@ def iptables_table(table_name):
         )
         raw_rules = result.stdout
         rules_dict = parse_iptables_output(raw_rules)
+        print(rules_dict)
     except subprocess.CalledProcessError as e:
         flash(f'Error retrieving iptables table: {e.stderr}', 'danger')
         return redirect(url_for('dashboard'))
