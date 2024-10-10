@@ -1,0 +1,35 @@
+{%extends "base.html"%}
+{%block title%}{{username}}{%endblock%}
+{%block content%}
+
+{%include "navbar.html"%}
+
+<div class="container mt-5">
+    <h2>Welcome, {{ username }}!</h2>
+    <p>You have successfully logged in using your Linux system credentials.</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h3 class="mt-4">IPTables Tables</h3>
+    <div class="row">
+        {% for table in tables %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ table.capitalize() }} Table</h5>
+                    <a href="{{ url_for('iptables_table', table_name=table) }}" class="btn btn-primary d-block mt-3">View Rules</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{%endblock%}
+
