@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired
 import pam
 import subprocess
 from src.iptables_parser import parse_iptables_output
+from src.restart import restart_iptables
 app = Flask(__name__)
 app.secret_key = 'iptables'  # Replace with a strong secret key
 # Define available iptables tables
@@ -91,9 +92,10 @@ def delete_rule(tablename,chainname,line):
             text=True,
             check=True
         )
-        flash("Rule deleted")
+        restart_iptables()
+        flash('Please log in to access the dashboard.', 'warning')
     except Exception as e:
-        flash(f"Error deleting :{e}")
+        flash(f"Error deleting :{e}",'danger')
 
     return redirect(f'/iptables/{tablename}')
 if __name__ == '__main__':
