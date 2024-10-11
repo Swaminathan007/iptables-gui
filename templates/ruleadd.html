@@ -1,116 +1,147 @@
 {% extends "base.html" %}
-
-{% block title %}{{ table }}{% endblock %}
-
+{% block title %}Add {{ table.upper() }} Table Rule{% endblock %}
 {% block content %}
-{% include 'navbar.html' %}
-<style>
-    /* Custom CSS for better phone layout */
 
-</style>
-<div class="container mt-5">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <a href="/iptables/{{table}}" class="btn btn-link">View rules</a>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {% include 'navbar.html' %}
+
+    <div class="container d-flex align-items-center justify-content-center min-vh-100">
+        <div class="card shadow-lg p-4 w-100 mt-2 mb-3" style="max-width: 80%;">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">
+                    <i class="bi bi-plus-circle-fill text-primary"></i> Add {{ table.upper() }} Table Rule
+                </h2>
+                <form method="POST">
+
+                    <!-- Chain Field -->
+                    <div class="mb-3">
+                        <label for="chain" class="form-label">CHAIN</label>
+                        <select name="chain" id="chain" class="form-select" required>
+                            {% for chain in chains %}
+                                <option value="{{ chain }}">{{ chain }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Protocol Field -->
+                    <div class="mb-3">
+                        <label for="protocol" class="form-label">PROTOCOL</label>
+                        <select name="protocol" id="protocol" class="form-select" required>
+                            <option value="tcp">TCP</option>
+                            <option value="udp">UDP</option>
+                            <option value="icmp">ICMP</option>
+                            <option value="any">ANY</option>
+                        </select>
+                    </div>
+
+                    <!-- Source IP CIDR Field -->
+                    <div class="mb-3">
+                        <label for="source_ip" class="form-label">SOURCE IP CIDR</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo-fill"></i></span>
+                            <input type="text" name="source_ip" id="source_ip" class="form-control" placeholder="e.g. 192.168.1.0/24" required>
+                        </div>
+                          </div>
+
+                    <!-- Destination IP CIDR Field -->
+                    <div class="mb-3">
+                        <label for="destination_ip" class="form-label">DESTINATION IP CIDR</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo-fill"></i></span>
+                            <input type="text" name="destination_ip" id="destination_ip" class="form-control" placeholder="e.g. 192.168.1.0/24" required>
+                        </div>
+                               </div>
+
+                    <!-- Source Port Field -->
+                    <div class="mb-3">
+                        <label for="source_port" class="form-label">SOURCE PORT</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-signpost-split"></i></span>
+                            <input type="number" name="source_port" id="source_port" class="form-control" placeholder="e.g. 80">
+                        </div>
+                            </div>
+
+                    <!-- Destination Port Field -->
+                    <div class="mb-3">
+                        <label for="destination_port" class="form-label">DESTINATION PORT</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-signpost-split"></i></span>
+                            <input type="number" name="destination_port" id="destination_port" class="form-control" placeholder="e.g. 8080">
+                        </div>
+                                 </div>
+
+                    <!-- Line Number Field -->
+                    <div class="mb-3">
+                        <label for="line_number" class="form-label">LINE NUMBER</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-list-numbered"></i></span>
+                            <input type="number" name="line_number" id="line_number" class="form-control" placeholder="e.g. 1">
+                        </div>
+                            </div>
+
+                    <!-- Action Field -->
+                    <div class="mb-3">
+                        <label for="action" class="form-label">ACTION</label>
+                        <select name="action" id="action" class="form-select" onchange="toggleRedirectInput()" required>
+                            <option value="ACCEPT">ACCEPT</option>
+                            <option value="DROP">DROP</option>
+                            <option value="REJECT">REJECT</option>
+                            <option value="LOG">LOG</option>
+                            <option value="SNAT">SNAT</option>
+                            <option value="DNAT">DNAT</option>
+                            <option value="MASQUERADE">MASQUERADE</option>
+                            <option value="RETURN">RETURN</option>
+                            <option value="MARK">MARK</option>
+                            <option value="CLASSIFY">CLASSIFY</option>
+                            <option value="REDIRECT">REDIRECT</option>
+                            <option value="QUEUE">QUEUE</option>
+                            <option value="CONNMARK">CONNMARK</option>
+                            <option value="CT">CT</option>
+                        </select>
+                       </div>
+
+                    <!-- Redirect To Field (Visible Only When DNAT is Selected) -->
+                    <div class="mb-3 d-none" id="redirectInput">
+                        <label for="redirect_destination" class="form-label">REDIRECT TO</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-arrow-right-circle-fill"></i></span>
+                            <input type="text" name="redirect_destination" id="redirect_destination" class="form-control" placeholder="e.g. 192.168.1.2:443">
+                        </div>
+                
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle-fill me-2"></i> Add Rule
+                        </button>
+                    </div>
+                </form>
             </div>
-        {% endfor %}
-        {% endif %} 
-    {% endwith %} 
-    <form  method="POST">
-        <h2>ADD {{table.upper()}} TABLE RULE</h2>
-
-        <div class="mb-2">
-            <label for="chain">CHAIN</label>
-            <select name="chain" id="chain" class="form-select">
-                {% for chain in chains %}
-                    <option value="{{ chain }}">{{ chain }}</option>
-                {% endfor %}
-            </select>
         </div>
+    </div>
 
-        <div class="mb-2">
-            <label for="protocol">PROTOCOL</label>
-            <select name="protocol" id="protocol" class="form-select">
-                <option value="tcp">TCP</option>
-                <option value="udp">UDP</option>
-                <option value="icmp">ICMP</option>
-                <option value="any">ANY</option>
-            </select>
-        </div>
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function toggleRedirectInput() {
+            const actionSelect = document.getElementById('action');
+            const redirectInput = document.getElementById('redirectInput');
+            const redirectDestination = document.getElementById('redirect_destination');
 
-        <div class="mb-2">
-            <label for="source_ip">SOURCE IP CIDR</label>
-            <input type="text" name="source_ip" id="source_ip" class="form-control" placeholder="e.g. 192.168.1.0/24">
-        </div>
-
-        <div class="mb-2">
-            <label for="destination_ip">DESTINATION IP CIDR</label>
-            <input type="text" name="destination_ip" id="destination_ip" class="form-control" placeholder="e.g. 192.168.1.0/24">
-        </div>
-
-        <div class="mb-2">
-            <label for="source_port">SOURCE PORT</label>
-            <input type="number" name="source_port" id="source_port" class="form-control" placeholder="e.g. 80">
-        </div>
-
-        <div class="mb-2">
-            <label for="destination_port">DESTINATION PORT</label>
-            <input type="number" name="destination_port" id="destination_port" class="form-control" placeholder="e.g. 8080">
-        </div>
-
-        <div class="mb-2">
-            <label for="line_number">LINE NUMBER</label>
-            <input type="number" name="line_number" id="line_number" class="form-control" placeholder="e.g. 1">
-        </div>
-
-        <div class="mb-2">
-            <label for="action">ACTION</label>
-            <select name="action" id="action" class="form-select" onchange="toggleRedirectInput()">
-                <option value="ACCEPT">ACCEPT</option>
-                <option value="DROP">DROP</option>
-                <option value="REJECT">REJECT</option>
-                <option value="LOG">LOG</option>
-                <option value="SNAT">SNAT</option>
-                <option value="DNAT">DNAT</option>
-                <option value="MASQUERADE">MASQUERADE</option>
-                <option value="RETURN">RETURN</option>
-                <option value="MARK">MARK</option>
-                <option value="CLASSIFY">CLASSIFY</option>
-                <option value="REDIRECT">REDIRECT</option>
-                <option value="QUEUE">QUEUE</option>
-                <option value="CONNMARK">CONNMARK</option>
-                <option value="CT">CT</option>
-            </select>
-        </div>
-
-        <!-- Redirect input, hidden by default -->
-        <div class="mb-2" id="redirectInput" style="display: none;">
-            <label for="redirect_destination">REDIRECT TO</label>
-            <input type="text" name="redirect_destination" id="redirect_destination" class="form-control" placeholder="e.g. 192.168.1.2:443" required>
-        </div>
-
-        <div class="mb-2">
-            <button type="submit" class="btn btn-primary">Add Rule</button>
-        </div>
-    </form>
-</div>
-
-<script>
-    function toggleRedirectInput() {
-        const actionSelect = document.getElementById('action');
-        const redirectInput = document.getElementById('redirectInput');
-        
-        // Show the redirect input if DNAT is selected, otherwise hide it
-        if (actionSelect.value === 'DNAT') {
-            redirectInput.style.display = 'block';
-        } else {
-            redirectInput.style.display = 'none';
+            if (actionSelect.value === 'DNAT') {
+                redirectInput.classList.remove('d-none');
+                redirectDestination.setAttribute('required', 'required');
+            } else {
+                redirectInput.classList.add('d-none');
+                redirectDestination.removeAttribute('required');
+            }
         }
-    }
-</script>
+
+        // Initialize the redirect input state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleRedirectInput();
+        });
+    </script>
 
 {% endblock %}

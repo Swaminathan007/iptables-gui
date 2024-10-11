@@ -1,37 +1,50 @@
-{%extends "base.html"%}
-{%block title%}Login{%endblock%}
-{%block content%}
-<div class="container mt-5">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+            <div class="card p-4 shadow">
+                <div class="card-body">
+                    <!-- Optional: Add a Logo or Icon -->
+                    <div class="text-center mb-4">
+                        <i class="bi bi-lock-fill display-4 text-primary"></i>
+                    </div>
+                    <h2 class="mb-4 text-center">Login</h2>
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Username Field -->
+                        <div class="mb-3">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control", placeholder="Enter your username") }}
+                            {% for error in form.username.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Password Field -->
+                        <div class="mb-4">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control", placeholder="Enter your password") }}
+                            {% for error in form.password.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                        
+                        <!-- Optional: Forgot Password Link -->
+                        <div class="mt-3 text-center">
+                            <a href="#" class="text-decoration-none">Forgot your password?</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        {% endfor %}
-        {% endif %}
-    {% endwith %}   
-    <h2 class="mb-4">Login</h2>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div class="mb-3">
-            {{ form.username.label(class="form-label") }}
-            {{ form.username(class="form-control", placeholder="Enter your username") }}
-            {% for error in form.username.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
         </div>
-        <div class="mb-3">
-            {{ form.password.label(class="form-label") }}
-            {{ form.password(class="form-control", placeholder="Enter your password") }}
-            {% for error in form.password.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-        <div class="mb-3">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
-    </form>
+    </div>
 </div>
-{%endblock%}
+{% endblock %}

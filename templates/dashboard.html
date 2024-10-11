@@ -1,35 +1,57 @@
-{%extends "base.html"%}
-{%block title%}{{username}}{%endblock%}
-{%block content%}
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
 
-{%include "navbar.html"%}
+    {% include "navbar.html" %}
 
-<div class="container mt-5">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <h2>Welcome, {{ username }}!</h2>
-    <h3 class="mt-4">IPTables Tables</h3>
-    <div class="row">
-        {% for table in tables %}
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-center">{{ table.capitalize() }} Table</h5>
-                    <a href="/ruleadd/{{table}}" class="btn btn-primary d-block mt-3">Add rules</a>
-                    <a href="{{ url_for('iptables_table', table_name=table) }}" class="btn btn-primary d-block mt-3">View Rules</a>
-                </div>
-            </div>
+    <div class="container mt-5">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Welcome Message -->
+        <div class="text-center mb-4">
+            <h2>Welcome, {{ username }}!</h2>
+            <p class="text-muted">Manage your IPTables rules efficiently</p>
         </div>
-        {% endfor %}
-    </div>
-</div>
-{%endblock%}
 
+        <!-- IPTables Tables Section -->
+        <h3 class="mb-4">IPTables Tables</h3>
+        <div class="row g-4">
+            {% for table in tables %}
+                <div class="col-12 col-sm-6 col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <!-- Table Icon -->
+                            <div class="mb-3 text-center">
+                                <!-- You can use different icons based on the table name if desired -->
+                                <i class="bi bi-collection-play-fill display-4 text-primary"></i>
+                            </div>
+                            <!-- Table Name -->
+                            <h5 class="card-title text-center">{{ table.capitalize() }} Table</h5>
+                            <!-- Action Buttons -->
+                            <div class="mt-auto">
+                                <a href="/ruleadd/{{ table }}" class="btn btn-success w-100 mb-2">
+                                    <i class="bi bi-plus-circle me-2"></i> Add Rules
+                                </a>
+                                <a href="{{ url_for('iptables_table', table_name=table) }}" class="btn btn-primary w-100">
+                                    <i class="bi bi-eye-fill me-2"></i> View Rules
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+    
