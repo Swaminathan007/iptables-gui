@@ -142,4 +142,4 @@ def ruleadd(table):
     return render_template("ruleadd.html",table=table,chains=chains)
 
 if __name__ == '__main__':
-    app.run(debug=True,host="0.0.0.0",port=14532)
+    app.run(debug=True,host="0.0.0.0",port=14532,ssl_context=('certs/cert.pem','certs/key.pem'))
