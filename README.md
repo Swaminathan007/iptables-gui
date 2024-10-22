@@ -12,4 +12,5 @@ sudo chmod +x setup.sh
 ./setup.sh
 
 Login page:
-    ![image](https://github.com/user-attachments/assets/e35ac364-6343-4cd1-a3f8-ac1bdf402a00)
+    
+![image](https://github.com/user-attachments/assets/e35ac364-6343-4cd1-a3f8-ac1bdf402a00)
