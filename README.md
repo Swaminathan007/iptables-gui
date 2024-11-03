@@ -2,6 +2,8 @@
 
 For now,rules can be viewed,deleted and added
 
+Currently supported on ubuntu and debian
+
 To start the app
 
 ```
