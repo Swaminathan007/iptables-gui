@@ -4,12 +4,12 @@ For now,rules can be viewed,deleted and added
 
 To start the app
 
-sudo git clone https://github.com/Swaminathan007/iptables-gui.git
+git clone https://github.com/Swaminathan007/iptables-gui.git
 
 
 sudo chmod +x setup.sh
 
-./setup.sh
+sudo ./setup.sh
 
 Login page:
     
