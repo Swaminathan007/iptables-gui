@@ -11,3 +11,8 @@ sudo cp cert.pem certs/
 sudo rm -rf *.pem
 sudo pip3 install flask flask-wtf pam
 sudo python3 app.py
+COMMAND="@reboot cd $PWD && /usr/bin/python3 app.py"
+crontab -l > mycron
+echo $COMMAND >> mycron
+crontab mycron
+rm mycron
