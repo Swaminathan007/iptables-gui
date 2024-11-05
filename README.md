@@ -12,18 +12,26 @@ sudo chmod +x setup.sh
 sudo ./setup.sh
 ```
 
-Login page:
 
-![image](https://github.com/user-attachments/assets/e35ac364-6343-4cd1-a3f8-ac1bdf402a00)
+## Login Page:
 
-Home page:
+![1730816616314](images/README/1730816616314.png)
 
-![image](https://github.com/user-attachments/assets/d3478c42-c8c0-4403-8525-5d8677cd30cf)
 
-Add rule page:
 
-![image](https://github.com/user-attachments/assets/5c65e2d1-383c-4240-8704-69288a1acc1d)
+## Dashboard Page:
 
-View rules page:
+![1730816671803](images/README/1730816671803.png)
 
-![image](https://github.com/user-attachments/assets/1082c675-0d66-403b-a3c2-8fb543074a0b)
+
+
+## Add Rule Page:
+
+![1730816720340](images/README/1730816720340.png)
+
+
+
+## View Rule page:
+
+
+![1730816760132](images/README/1730816760132.png)
