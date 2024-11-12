@@ -8,7 +8,8 @@ from src.iptables_parser import parse_iptables_output,get_chains
 from src.restart import restart_iptables
 from src.rule_adder import add_rule
 app = Flask(__name__)
-app.secret_key = 'iptables'  # Replace with a strong secret key
+app.secret_key = 'iptables'  
+
 # Define available iptables tables
 IPTABLES_TABLES = ['filter', 'nat', 'mangle', 'raw', 'security']
 
