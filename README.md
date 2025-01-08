@@ -8,6 +8,7 @@ To start the app
 
 ```
 git clone https://github.com/Swaminathan007/iptables-gui.git
+cd iptables-gui
 sudo chmod +x setup.sh
 sudo ./setup.sh
 ```
